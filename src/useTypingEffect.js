@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { playTypeClick } from './typingSound'
 
 export function useTypingEffect(lines, speed = 12, enabled = true) {
   const [displayedLines, setDisplayedLines] = useState([])
@@ -20,6 +21,7 @@ export function useTypingEffect(lines, speed = 12, enabled = true) {
     let lineIdx = 0
     let charIdx = 0
     const result = []
+    let tickCount = 0
 
     intervalRef.current = setInterval(() => {
       if (lineIdx >= lines.length) {
@@ -49,6 +51,12 @@ export function useTypingEffect(lines, speed = 12, enabled = true) {
         result.push(partial)
       } else {
         result[lineIdx] = partial
+      }
+
+      // Play click sound every few ticks to avoid overwhelming audio
+      tickCount++
+      if (tickCount % 2 === 0) {
+        playTypeClick()
       }
 
       if (charIdx >= currentLine.length) {

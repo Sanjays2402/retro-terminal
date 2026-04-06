@@ -5,8 +5,9 @@ import MatrixRain from './MatrixRain'
 import {
   THEMES, COMMANDS, HELP_TEXT, ABOUT_TEXT, PROJECTS_TEXT,
   CONTACT_TEXT, EDUCATION_TEXT, EXPERIENCE_TEXT, NEOFETCH_TEXT,
-  SUDO_TEXT,
+  SUDO_TEXT, WEATHER_DATA, ASCII_ART_COLLECTION,
 } from './data'
+import { isSoundEnabled, setSoundEnabled } from './typingSound'
 
 export default function Terminal() {
   const [history, setHistory] = useState([])
@@ -16,6 +17,9 @@ export default function Terminal() {
   const [theme, setTheme] = useState('green')
   const [matrixActive, setMatrixActive] = useState(false)
   const [suggestion, setSuggestion] = useState('')
+  const [gameActive, setGameActive] = useState(false)
+  const [gameTarget, setGameTarget] = useState(null)
+  const [gameAttempts, setGameAttempts] = useState(0)
 
   const inputRef = useRef(null)
   const scrollRef = useRef(null)
@@ -56,9 +60,60 @@ export default function Terminal() {
     setHistory(prev => [...prev, { id, type, ...data }])
   }
 
-  const processCommand = (cmd) => {
+  const processGameInput = (cmd) => {
     const trimmed = cmd.trim().toLowerCase()
-    const parts = trimmed.split(' ')
+    addEntry('command', { text: cmd.trim() })
+
+    if (trimmed === 'quit' || trimmed === 'exit') {
+      setGameActive(false)
+      setGameTarget(null)
+      setGameAttempts(0)
+      addEntry('output', { lines: ['', '  Game exited. Back to terminal.', ''] })
+      return
+    }
+
+    const guess = parseInt(trimmed, 10)
+    if (isNaN(guess)) {
+      addEntry('output', { lines: ['', '  Enter a number between 1-100, or "quit" to exit.', ''] })
+      return
+    }
+
+    const attempts = gameAttempts + 1
+    setGameAttempts(attempts)
+
+    if (guess === gameTarget) {
+      setGameActive(false)
+      setGameTarget(null)
+      setGameAttempts(0)
+      addEntry('output', {
+        lines: [
+          '',
+          `  🎉 Correct! The number was ${gameTarget}.`,
+          `  You got it in ${attempts} attempt${attempts === 1 ? '' : 's'}!`,
+          '',
+          attempts <= 3 ? '  Rating: 🌟🌟🌟 — Incredible!' :
+          attempts <= 5 ? '  Rating: 🌟🌟 — Nice work!' :
+          attempts <= 7 ? '  Rating: 🌟 — Not bad!' :
+                          '  Rating: 💪 — You got there!',
+          '',
+        ],
+      })
+    } else if (guess < gameTarget) {
+      addEntry('output', { lines: ['', `  📈 Too low! Try higher. (Attempt ${attempts})`, ''] })
+    } else {
+      addEntry('output', { lines: ['', `  📉 Too high! Try lower. (Attempt ${attempts})`, ''] })
+    }
+  }
+
+  const processCommand = (cmd) => {
+    // If game is active, route to game handler
+    if (gameActive) {
+      processGameInput(cmd)
+      return
+    }
+
+    const trimmed = cmd.trim().toLowerCase()
+    const parts = trimmed.split(/\s+/)
     const base = parts[0]
 
     // Add command to display
@@ -131,6 +186,118 @@ export default function Terminal() {
         setTimeout(() => setMatrixActive(true), 500)
         break
 
+      case 'weather': {
+        const city = parts[1]
+        if (city && WEATHER_DATA[city]) {
+          const w = WEATHER_DATA[city]
+          addEntry('output', {
+            lines: [
+              '',
+              '  ╔══════════════════════════════════════════╗',
+              `  ║  WEATHER — ${w.city.padEnd(30)}║`,
+              '  ╚══════════════════════════════════════════╝',
+              '',
+              ...w.art.map(l => '    ' + l),
+              '',
+              `    Condition : ${w.condition}`,
+              `    Temp      : ${w.temp}`,
+              `    Wind      : ${w.wind}`,
+              `    Humidity  : ${w.humidity}`,
+              '',
+            ],
+          })
+        } else {
+          const cities = Object.keys(WEATHER_DATA).join(', ')
+          addEntry('output', {
+            lines: [
+              '',
+              '  Usage: weather <city>',
+              `  Available: ${cities}`,
+              '',
+            ],
+          })
+        }
+        break
+      }
+
+      case 'games': {
+        const target = Math.floor(Math.random() * 100) + 1
+        setGameActive(true)
+        setGameTarget(target)
+        setGameAttempts(0)
+        addEntry('output', {
+          lines: [
+            '',
+            '  ╔══════════════════════════════════════════╗',
+            '  ║        NUMBER GUESSING GAME              ║',
+            '  ╚══════════════════════════════════════════╝',
+            '',
+            '  I\'m thinking of a number between 1 and 100.',
+            '  Type your guess and press Enter.',
+            '  Type "quit" to exit the game.',
+            '',
+            '  Good luck! 🎲',
+            '',
+          ],
+        })
+        break
+      }
+
+      case 'ascii-art': {
+        const idx = Math.floor(Math.random() * ASCII_ART_COLLECTION.length)
+        const chosen = ASCII_ART_COLLECTION[idx]
+        addEntry('output', {
+          lines: [
+            '',
+            `  ── ${chosen.name} ──`,
+            '',
+            ...chosen.art.map(l => '    ' + l),
+          ],
+        })
+        break
+      }
+
+      case 'history': {
+        const recent = commandHistory.slice(-20)
+        if (recent.length === 0) {
+          addEntry('output', { lines: ['', '  No command history yet.', ''] })
+        } else {
+          const lines = [
+            '',
+            '  ╔══════════════════════════════════════════╗',
+            '  ║          COMMAND HISTORY                 ║',
+            '  ╚══════════════════════════════════════════╝',
+            '',
+            ...recent.map((c, i) => `  ${String(i + 1).padStart(4)}  ${c}`),
+            '',
+          ]
+          addEntry('output', { lines })
+        }
+        break
+      }
+
+      case 'sound': {
+        const mode = parts[1]
+        if (mode === 'on') {
+          setSoundEnabled(true)
+          addEntry('output', { lines: ['', '  🔊 Typing sounds enabled.', ''] })
+        } else if (mode === 'off') {
+          setSoundEnabled(false)
+          addEntry('output', { lines: ['', '  🔇 Typing sounds disabled.', ''] })
+        } else {
+          const current = isSoundEnabled() ? 'on' : 'off'
+          addEntry('output', {
+            lines: [
+              '',
+              `  Sound is currently: ${current}`,
+              '  Usage: sound on | sound off',
+              '',
+            ],
+          })
+        }
+        break
+      }
+
       case 'sudo':
         if (trimmed.includes('rm -rf')) {
           addEntry('output', { lines: SUDO_TEXT })
@@ -155,7 +322,12 @@ export default function Terminal() {
 
     const matches = COMMANDS.filter(c => c.startsWith(partial))
     if (matches.length === 1) {
-      setInput(matches[0] === 'theme' ? 'theme ' : matches[0])
+      const cmd = matches[0]
+      setInput(
+        cmd === 'theme' || cmd === 'weather' || cmd === 'sound'
+          ? cmd + ' '
+          : cmd
+      )
       setSuggestion('')
     } else if (matches.length > 1) {
       // Show options
@@ -225,6 +397,8 @@ export default function Terminal() {
     }
   }
 
+  const promptPrefix = gameActive ? 'guess> ' : 'visitor@portfolio:~$ '
+
   return (
     <>
       <MatrixRain
@@ -258,7 +432,7 @@ export default function Terminal() {
 
           {/* Input line */}
           <div className="terminal-text text-sm flex items-center whitespace-pre mt-1">
-            <span style={{ opacity: 0.7 }}>visitor@portfolio:~$ </span>
+            <span style={{ opacity: 0.7 }}>{promptPrefix}</span>
             <div className="relative flex-1">
               <input
                 ref={inputRef}
