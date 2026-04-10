@@ -30,7 +30,7 @@ export const BOOT_SEQUENCE = [
 export const COMMANDS = [
   'help', 'about', 'skills', 'projects', 'contact',
   'education', 'experience', 'clear', 'theme', 'matrix',
-  'neofetch', 'weather', 'games', 'ascii-art', 'history',
+  'neofetch', 'weather', 'fortune', 'games', 'ascii-art', 'history',
   'sound', 'sudo rm -rf /',
 ]
 
@@ -47,6 +47,7 @@ export const HELP_TEXT = [
   '│  experience  — Work experience                │',
   '│  neofetch    — System info (ASCII art)        │',
   '│  weather <c> — ASCII weather for a city       │',
+  '│  fortune     — Random programming quote        │',
   '│  games       — Play a number guessing game    │',
   '│  ascii-art   — Display random ASCII art       │',
   '│  history     — Show last 20 commands          │',
@@ -323,6 +324,34 @@ export const WEATHER_DATA = {
     ],
   },
 }
+
+export const FORTUNE_QUOTES = [
+  '"Any fool can write code that a computer can understand. Good programmers write code that humans can understand." — Martin Fowler',
+  '"First, solve the problem. Then, write the code." — John Johnson',
+  '"Experience is the name everyone gives to their mistakes." — Oscar Wilde',
+  '"In order to be irreplaceable, one must always be different." — Coco Chanel',
+  '"Java is to JavaScript what car is to carpet." — Chris Heilmann',
+  '"Knowledge is power." — Francis Bacon',
+  '"Fix the cause, not the symptom." — Steve Maguire',
+  '"Simplicity is the soul of efficiency." — Austin Freeman',
+  '"Before software can be reusable it first has to be usable." — Ralph Johnson',
+  '"Make it work, make it right, make it fast." — Kent Beck',
+  '"Code is like humor. When you have to explain it, it\'s bad." — Cory House',
+  '"The best error message is the one that never shows up." — Thomas Fuchs',
+  '"Deleted code is debugged code." — Jeff Sickel',
+  '"It\'s not a bug — it\'s an undocumented feature." — Anonymous',
+  '"The most disastrous thing that you can ever learn is your first programming language." — Alan Kay',
+  '"The only way to learn a new programming language is by writing programs in it." — Dennis Ritchie',
+  '"Talk is cheap. Show me the code." — Linus Torvalds',
+  '"Programs must be written for people to read, and only incidentally for machines to execute." — Harold Abelson',
+  '"Truth can only be found in one place: the code." — Robert C. Martin',
+  '"Give a man a program, frustrate him for a day. Teach a man to program, frustrate him for a lifetime." — Muhammad Waseem',
+  '"A language that doesn\'t affect the way you think about programming is not worth knowing." — Alan Perlis',
+  '"Sometimes it pays to stay in bed on Monday, rather than spending the rest of the week debugging Monday\'s code." — Dan Salomon',
+  '"Measuring programming progress by lines of code is like measuring aircraft building progress by weight." — Bill Gates',
+  '"Debugging is twice as hard as writing the code in the first place." — Brian Kernighan',
+  '"The computer was born to solve problems that did not exist before." — Bill Gates',
+]
 
 export const ASCII_ART_COLLECTION = [
   {

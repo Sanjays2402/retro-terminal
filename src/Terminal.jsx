@@ -5,7 +5,7 @@ import MatrixRain from './MatrixRain'
 import {
   THEMES, COMMANDS, HELP_TEXT, ABOUT_TEXT, PROJECTS_TEXT,
   CONTACT_TEXT, EDUCATION_TEXT, EXPERIENCE_TEXT, NEOFETCH_TEXT,
-  SUDO_TEXT, WEATHER_DATA, ASCII_ART_COLLECTION,
+  SUDO_TEXT, WEATHER_DATA, ASCII_ART_COLLECTION, FORTUNE_QUOTES,
 } from './data'
 import { isSoundEnabled, setSoundEnabled } from './typingSound'
 
@@ -252,6 +252,22 @@ export default function Terminal() {
             `  ── ${chosen.name} ──`,
             '',
             ...chosen.art.map(l => '    ' + l),
+          ],
+        })
+        break
+      }
+
+      case 'fortune': {
+        const quote = FORTUNE_QUOTES[Math.floor(Math.random() * FORTUNE_QUOTES.length)]
+        addEntry('output', {
+          lines: [
+            '',
+            '  ╔══════════════════════════════════════════╗',
+            '  ║          🌟 FORTUNE 🌟                   ║',
+            '  ╚══════════════════════════════════════════╝',
+            '',
+            ...quote.match(/.{1,44}/g).map(l => `  ${l}`),
+            '',
           ],
         })
         break
