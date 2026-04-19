@@ -1,8 +1,13 @@
 export const THEMES = {
   green: { color: '#00ff41', glow: 'rgba(0, 255, 65, 0.6)', dim: 'rgba(0, 255, 65, 0.3)', name: 'Phosphor Green' },
   amber: { color: '#ffb000', glow: 'rgba(255, 176, 0, 0.6)', dim: 'rgba(255, 176, 0, 0.3)', name: 'Amber' },
-  blue: { color: '#00d4ff', glow: 'rgba(0, 212, 255, 0.6)', dim: 'rgba(0, 212, 255, 0.3)', name: 'Ice Blue' },
+  blue:  { color: '#00d4ff', glow: 'rgba(0, 212, 255, 0.6)', dim: 'rgba(0, 212, 255, 0.3)', name: 'Ice Blue' },
   white: { color: '#f0f0f0', glow: 'rgba(240, 240, 240, 0.5)', dim: 'rgba(240, 240, 240, 0.25)', name: 'Monochrome' },
+  // New themes
+  red:   { color: '#ff3355', glow: 'rgba(255, 51, 85, 0.55)', dim: 'rgba(255, 51, 85, 0.28)', name: 'Crimson CRT' },
+  violet:{ color: '#b084ff', glow: 'rgba(176, 132, 255, 0.55)', dim: 'rgba(176, 132, 255, 0.28)', name: 'Synthwave' },
+  cyan:  { color: '#5eead4', glow: 'rgba(94, 234, 212, 0.55)', dim: 'rgba(94, 234, 212, 0.28)', name: 'Vaporwave' },
+  pink:  { color: '#ff77b5', glow: 'rgba(255, 119, 181, 0.55)', dim: 'rgba(255, 119, 181, 0.28)', name: 'Bubblegum' },
 }
 
 export const BOOT_SEQUENCE = [
@@ -32,6 +37,10 @@ export const COMMANDS = [
   'education', 'experience', 'clear', 'theme', 'matrix',
   'neofetch', 'weather', 'fortune', 'games', 'ascii-art', 'history',
   'sound', 'sudo rm -rf /',
+  // New commands
+  'date', 'time', 'echo', 'whoami', 'uname', 'uptime',
+  'coffee', 'cowsay', 'stats', 'banner', 'cal', 'rickroll',
+  'share',
 ]
 
 export const HELP_TEXT = [
@@ -40,7 +49,7 @@ export const HELP_TEXT = [
   '├─────────────────────────────────────────────┤',
   '│  help        — Show this help message        │',
   '│  about       — About me                      │',
-  '│  skills      — Technical skills & proficiency │',
+  '│  skills      — Technical skills              │',
   '│  projects    — Featured projects              │',
   '│  contact     — Get in touch                   │',
   '│  education   — Education history              │',
@@ -48,17 +57,30 @@ export const HELP_TEXT = [
   '│  neofetch    — System info (ASCII art)        │',
   '│  weather <c> — ASCII weather for a city       │',
   '│  fortune     — Random programming quote        │',
-  '│  games       — Play a number guessing game    │',
-  '│  ascii-art   — Display random ASCII art       │',
+  '│  games       — Number guessing game           │',
+  '│  ascii-art   — Random ASCII art               │',
   '│  history     — Show last 20 commands          │',
   '│  sound on|off— Toggle typing sound effects    │',
-  '│  theme <c>   — Change color (green/amber/     │',
-  '│                blue/white)                    │',
+  '│  theme <c>   — Change color theme             │',
   '│  matrix      — 🐇 Follow the white rabbit    │',
   '│  clear       — Clear terminal                 │',
   '├─────────────────────────────────────────────┤',
-  '│  ↑/↓ arrows for command history              │',
-  '│  Tab for auto-completion                     │',
+  '│  ─── FUN ───                                 │',
+  '│  banner <w>  — Big ASCII banner text          │',
+  '│  cowsay <m>  — Cow says something              │',
+  '│  coffee      — Get a virtual coffee           │',
+  '│  rickroll    — You know the drill             │',
+  '│  ─── SYSTEM ───                              │',
+  '│  date / time — Current date and time          │',
+  '│  cal         — Calendar for current month     │',
+  '│  echo <text> — Print text back                │',
+  '│  whoami / uname / uptime                      │',
+  '│  stats       — Session statistics             │',
+  '│  share       — Copy URL to clipboard          │',
+  '├─────────────────────────────────────────────┤',
+  '│  Themes: green amber blue white red violet   │',
+  '│          cyan pink                            │',
+  '│  ↑/↓ history   Tab auto-complete   Ctrl+L clear│',
   '└─────────────────────────────────────────────┘',
 ]
 

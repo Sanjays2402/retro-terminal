@@ -9,12 +9,53 @@ import {
 } from './data'
 import { isSoundEnabled, setSoundEnabled } from './typingSound'
 
+// Minimal 5x5 block font for `banner` command
+const BANNER_FONT = {
+  A: ['█████','█   █','█████','█   █','█   █'],
+  B: ['████ ','█   █','████ ','█   █','████ '],
+  C: [' ████','█    ','█    ','█    ',' ████'],
+  D: ['████ ','█   █','█   █','█   █','████ '],
+  E: ['█████','█    ','████ ','█    ','█████'],
+  F: ['█████','█    ','████ ','█    ','█    '],
+  G: [' ████','█    ','█ ███','█   █',' ████'],
+  H: ['█   █','█   █','█████','█   █','█   █'],
+  I: ['█████','  █  ','  █  ','  █  ','█████'],
+  J: ['█████','   █ ','   █ ','█  █ ',' ██  '],
+  K: ['█   █','█  █ ','███  ','█  █ ','█   █'],
+  L: ['█    ','█    ','█    ','█    ','█████'],
+  M: ['█   █','██ ██','█ █ █','█   █','█   █'],
+  N: ['█   █','██  █','█ █ █','█  ██','█   █'],
+  O: [' ███ ','█   █','█   █','█   █',' ███ '],
+  P: ['████ ','█   █','████ ','█    ','█    '],
+  Q: [' ███ ','█   █','█ █ █','█  ██',' ██ █'],
+  R: ['████ ','█   █','████ ','█  █ ','█   █'],
+  S: [' ████','█    ',' ███ ','    █','████ '],
+  T: ['█████','  █  ','  █  ','  █  ','  █  '],
+  U: ['█   █','█   █','█   █','█   █',' ███ '],
+  V: ['█   █','█   █','█   █',' █ █ ','  █  '],
+  W: ['█   █','█   █','█ █ █','██ ██','█   █'],
+  X: ['█   █',' █ █ ','  █  ',' █ █ ','█   █'],
+  Y: ['█   █',' █ █ ','  █  ','  █  ','  █  '],
+  Z: ['█████','   █ ','  █  ',' █   ','█████'],
+  ' ': ['     ','     ','     ','     ','     '],
+  '!': ['  █  ','  █  ','  █  ','     ','  █  '],
+  '?': ['████ ','    █','  ██ ','     ','  █  '],
+}
+function bannerText(text) {
+  const lines = ['', '', '', '', '']
+  for (const ch of text) {
+    const glyph = BANNER_FONT[ch] || BANNER_FONT[' ']
+    for (let i = 0; i < 5; i++) lines[i] += glyph[i] + ' '
+  }
+  return lines
+}
+
 export default function Terminal() {
   const [history, setHistory] = useState([])
   const [input, setInput] = useState('')
   const [commandHistory, setCommandHistory] = useState([])
   const [historyIndex, setHistoryIndex] = useState(-1)
-  const [theme, setTheme] = useState('green')
+  const [theme, setTheme] = useState(() => localStorage.getItem('rt-theme') || 'green')
   const [matrixActive, setMatrixActive] = useState(false)
   const [suggestion, setSuggestion] = useState('')
   const [gameActive, setGameActive] = useState(false)
@@ -24,6 +65,7 @@ export default function Terminal() {
   const inputRef = useRef(null)
   const scrollRef = useRef(null)
   const idCounter = useRef(0)
+  const sessionBootTime = useRef(Date.now())
 
   const themeColor = THEMES[theme].color
 
@@ -33,7 +75,20 @@ export default function Terminal() {
     document.documentElement.style.setProperty('--terminal-color', t.color)
     document.documentElement.style.setProperty('--terminal-glow', t.glow)
     document.documentElement.style.setProperty('--terminal-dim', t.dim)
+    localStorage.setItem('rt-theme', theme)
   }, [theme])
+
+  // Ctrl+L to clear
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.ctrlKey && e.key.toLowerCase() === 'l') {
+        e.preventDefault()
+        setHistory([])
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
 
   // Auto-scroll
   useEffect(() => {
@@ -310,6 +365,123 @@ export default function Terminal() {
               '',
             ],
           })
+        }
+        break
+      }
+
+      case 'date': {
+        const d = new Date()
+        addEntry('output', { lines: ['', `  ${d.toDateString()}`, ''] })
+        break
+      }
+      case 'time': {
+        const d = new Date()
+        addEntry('output', { lines: ['', `  ${d.toLocaleTimeString()}`, ''] })
+        break
+      }
+      case 'echo': {
+        const rest = cmd.trim().slice(4).trim()
+        addEntry('output', { lines: ['', `  ${rest || ''}`, ''] })
+        break
+      }
+      case 'whoami':
+        addEntry('output', { lines: ['', '  sanjay@portfolio-terminal', ''] })
+        break
+      case 'uname':
+        addEntry('output', { lines: ['', '  PortfolioOS 2.0 x86_64 (Neural Processing Unit)', ''] })
+        break
+      case 'uptime': {
+        const bootT = sessionBootTime.current || Date.now()
+        const s = Math.floor((Date.now() - bootT) / 1000)
+        const mm = Math.floor(s / 60), ss = s % 60
+        addEntry('output', { lines: ['', `  up ${mm}m ${ss}s  — ${commandHistory.length} commands issued`, ''] })
+        break
+      }
+      case 'coffee':
+        addEntry('output', { lines: [
+          '',
+          '         (  )   (   )  )',
+          '          ) (   )  (  (',
+          '          ( )  (    ) )',
+          '          _____________',
+          '         <_____________> ___',
+          '         |             |/ _ \\',
+          '         |               | | |',
+          '         |               |_| |',
+          '      ___|             |\\___/',
+          '     /    \\___________/    \\',
+          '     \\_____________________/',
+          '',
+          '  ☕ Coffee served. Have a productive session.',
+          '',
+        ] })
+        break
+      case 'cowsay': {
+        const say = cmd.trim().slice(6).trim() || 'Moo!'
+        const bar = '─'.repeat(say.length + 2)
+        addEntry('output', { lines: [
+          '',
+          `   ┌${bar}┐`,
+          `   │ ${say} │`,
+          `   └${bar}┘`,
+          '          \\   ^__^',
+          '           \\  (oo)\\_______',
+          '              (__)\\       )\\/\\',
+          '                  ||----w |',
+          '                  ||     ||',
+          '',
+        ] })
+        break
+      }
+      case 'stats': {
+        const uniqueCmds = new Set(commandHistory.map(c => c.split(' ')[0])).size
+        addEntry('output', { lines: [
+          '',
+          '  ╔═════════════════════════════════════════╗',
+          '  ║         SESSION STATS                    ║',
+          '  ╚═════════════════════════════════════════╝',
+          '',
+          `    Commands issued : ${commandHistory.length}`,
+          `    Unique commands : ${uniqueCmds}`,
+          `    Current theme   : ${THEMES[theme].name}`,
+          `    History entries : ${history.length}`,
+          '',
+        ] })
+        break
+      }
+      case 'banner': {
+        const word = (cmd.trim().slice(6).trim() || 'HELLO').toUpperCase().slice(0, 10)
+        addEntry('output', { lines: ['', ...bannerText(word).map(l => '  ' + l), ''] })
+        break
+      }
+      case 'cal': {
+        const d = new Date()
+        const m = d.getMonth(), y = d.getFullYear()
+        const first = new Date(y, m, 1).getDay()
+        const days = new Date(y, m + 1, 0).getDate()
+        const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December']
+        const lines = ['', `     ${monthNames[m]} ${y}`, '  Su Mo Tu We Th Fr Sa']
+        let row = '   '.repeat(first)
+        for (let i = 1; i <= days; i++) {
+          const cell = (i === d.getDate() ? `[${String(i).padStart(2)}]` : ` ${String(i).padStart(2)} `)
+          row += cell.slice(-3)
+          if ((first + i) % 7 === 0) { lines.push('  ' + row); row = '' }
+        }
+        if (row.trim()) lines.push('  ' + row)
+        lines.push('')
+        addEntry('output', { lines })
+        break
+      }
+      case 'rickroll':
+        addEntry('output', { lines: ['', '  🎵 Never gonna give you up...', '  Opening YouTube (j/k, just a message)', '  🎵 Never gonna let you down...', ''] })
+        break
+      case 'share': {
+        const url = window.location.origin + window.location.pathname
+        try {
+          navigator.clipboard.writeText(url)
+          addEntry('output', { lines: ['', `  🔗 URL copied to clipboard:`, `    ${url}`, ''] })
+        } catch {
+          addEntry('output', { lines: ['', `  🔗 Share URL:`, `    ${url}`, ''] })
         }
         break
       }
