@@ -1,4 +1,4 @@
-# 📡 retro-terminal
+# retro-terminal
 
 A CRT-style interactive terminal that doubles as a portfolio page. Type commands to explore — just like the old days, but shinier.
 
@@ -9,19 +9,19 @@ A CRT-style interactive terminal that doubles as a portfolio page. Type commands
 
 ---
 
-## ✨ Features
+## Features
 
-- 🖥️ **Full CRT experience** — scanlines, phosphor glow, screen curvature, vignette, subtle flicker
-- ⚡ **BIOS-style boot sequence** — loading bars, hardware checks, "SYSTEM READY"
+- **Full CRT experience** — scanlines, phosphor glow, screen curvature, vignette, subtle flicker
+- **BIOS-style boot sequence** — loading bars, hardware checks, "SYSTEM READY"
 - ⌨️ **Interactive commands** — type to navigate the portfolio
-- 🎨 **4 color themes** — green phosphor, amber, ice blue, monochrome
-- 🟩 **Matrix rain easter egg** — follow the white rabbit
-- 📜 **Command history** — up/down arrows to recall previous commands
-- 🔤 **Tab completion** — autocomplete command names as you type
-- ✍️ **Typing animation** — character-by-character output for that authentic feel
+- **4 color themes** — green phosphor, amber, ice blue, monochrome
+- **Matrix rain easter egg** — follow the white rabbit
+- **Command history** — up/down arrows to recall previous commands
+- **Tab completion** — autocomplete command names as you type
+- **Typing animation** — character-by-character output for that authentic feel
 - █ **Blinking block cursor** — because this is a real terminal
 
-## 📟 Available Commands
+## Available Commands
 
 | Command | Description |
 |---------|-------------|
@@ -34,11 +34,11 @@ A CRT-style interactive terminal that doubles as a portfolio page. Type commands
 | `experience` | Work experience timeline |
 | `neofetch` | System info in ASCII art style |
 | `theme <color>` | Switch theme — `green` / `amber` / `blue` / `white` |
-| `matrix` | 🐇 Trigger Matrix digital rain |
+| `matrix` | Trigger Matrix digital rain |
 | `clear` | Clear the terminal |
 | `sudo rm -rf /` | Try it. I dare you. |
 
-## 🚀 Getting Started
+## Getting Started
 
 ```bash
 # Clone
@@ -55,7 +55,7 @@ npm run dev
 npm run build
 ```
 
-## 🛠 Tech Stack
+## Tech Stack
 
 - **React 19** — UI components
 - **Vite** — lightning-fast bundler
@@ -63,19 +63,19 @@ npm run build
 - **Framer Motion** — smooth animations
 - **JetBrains Mono** — the monospace font
 
-## 🎨 Themes
+## Themes
 
 | Theme | Color | Hex |
 |-------|-------|-----|
-| 🟢 Green | Phosphor Green | `#00ff41` |
-| 🟡 Amber | Classic Amber | `#ffb000` |
-| 🔵 Blue | Ice Blue | `#00d4ff` |
-| ⚪ White | Monochrome | `#f0f0f0` |
+| Green | Phosphor Green | `#00ff41` |
+| Amber | Classic Amber | `#ffb000` |
+| Blue | Ice Blue | `#00d4ff` |
+| White | Monochrome | `#f0f0f0` |
 
-## 📝 Customization
+## Customization
 
 All portfolio data lives in `src/data.js`. Edit the arrays to swap in your own info — about text, skills, projects, contact links, education, and experience.
 
-## 📄 License
+## License
 
 MIT
